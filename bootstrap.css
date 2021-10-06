@@ -1,0 +1,28 @@
+/* .container {
+    min-height: 500px;
+    background-color: blanchedalmond;
+} */
+
+/* .cd-covers img {
+    width: 100%;
+} */
+
+.btn-primary {
+    background: #00ff84;
+    color: #010101;
+    border: 3px solid #00cc69;;
+}
+
+.btn-primary:hover {
+    background-color: #00cc69;
+    color: #010101;
+    border: 3px solid #010101;
+}
+
+.card {
+    box-shadow: 0 4px 10px rgb(0 0 0 / 15%);
+}
+
+.carousel-control-next-icon {
+    background-image:url(/assets/images/play.png)
+}
