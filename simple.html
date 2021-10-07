@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        window.onload = async () => { //when the page is ready
+            const response = await fetch("https://striveschool-api.herokuapp.com/books") //fetch the info with an HTTP request and wait for the result
+            const books = await response.json() //transform the result into a JavaScript Object
+            
+            for(let i = 0; i < books.length; i++) { //for each element in the response
+                document.querySelector("body").innerHTML+= "<p>" + books[i].title  + "</p>" //add a p in the body with the title of the book in it
+            }
+        }
+    </script>
+</body>
+</html>

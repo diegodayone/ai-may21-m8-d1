@@ -1,15 +1,67 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
     <link href="bookstore.css" rel="stylesheet" />
     <title>Hello, world!</title>
-  </head>
-  <body>
+</head>
 
-    <div id="testingJavaScript">
+<body>
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Welcome to our Book Store</h1>
+            <p class="col-md-8 fs-4">Worst books in town at the higher prices on the web!</p>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Search for your book...</label>
+                <input type="text" class="form-control" id="searchField" placeholder="Lord of the rings...">
+              </div>
+            <button class="btn btn-primary btn-lg" type="button" onclick="searchBooks()">Search 👀</button>
+        </div>
+    </div>
+
+
+    <!-- <div class="container">
+        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                    aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                    aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div> -->
+
+    <div class="container">
+        <div class="row" id="booksList">
+            <!-- 
+                LG => 6 books per row -> 12 / 6 => 2 => each column should take 2 out of 12 availble spaces in the grid => col-lg-2
+                MD => 4 books per row -> 12 / 4 => 3 => each column should take 3 out of 12 availble spaces in the grid => col-md-3
+                SM => 3 books per row -> 12 / 3 => 4 => each column should take 4 out of 12 availble spaces in the grid => col-sm-4
+                XS => 2 books per row -> 12 / 2 => 6 => each column should take 6 out of 12 availble spaces in the grid => col-6
+            -->
+        </div>
+    </div>
+
+    <!-- <div id="testingJavaScript">
         Hello!
     </div>
 
@@ -26,13 +78,11 @@
         <li>Some Content!</li>
     </ul>
 
-    <input type="button" onclick="AddElement()" />
+    <input type="button" onclick="AddElement()" /> -->
 
-      <div class="container">
-          <div class="row">
-          </div>
-      </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ"
+        crossorigin="anonymous"></script>
     <script>
         // const => the value will not change
         // var => the old school not scoped variable
@@ -49,24 +99,64 @@
             myList.appendChild(newLi)
         }
 
+        async function searchBooks() {
+            
+            // get the text from the search field
+            const searchField = document.querySelector("#searchField") // .value
+            const searchValue = searchField.value 
+            // send a request to search for a specific book
+            await loadBooks(searchValue)
+            // re-render the book list
+        }
+
+        async function loadBooks(query) {
+            let URL = "https://striveschool-api.herokuapp.com/books"
+            if (query) { // adding the title to the query string example "https://striveschool-api.herokuapp.com/books?title=dragon"
+                URL +="?title=" + query
+            }
+
+            const response = await fetch(URL)
+            const books = await response.json() // transform the response payload into a JavaScript object
+
+            // get a reference to the row in which a want to add the book
+            const booksList = document.querySelector("#booksList")
+            booksList.innerHTML = "" // cleaning any previous item from the list
+            // for each book
+            for (let i = 0; i < books.length; i++) { //this operation will be executed books.length time, the index will be store in the variable i
+                const book = books[i] // the single book I'm printing in this operation
+                booksList.innerHTML += `
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="card">
+                            <img src="${book.img}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">${book.title}</h5>
+                                <p class="card-text">${book.category}</p>
+                                <a href="https://amazon.com/dp/${book.asin}" target="_blank" class="btn btn-primary">Buy it for ${book.price}</a>
+                            </div>
+                        </div>
+                    </div>`
+            }
+        }
+
 
         // window.onload fires an event when the page is completely loaded (CSS, HTML & JS are in place)
         window.onload = async () => {
-            console.log("it is working")
-            //https://striveschool-api.herokuapp.com/books
-            // fetch("https://striveschool-api.herokuapp.com/books", {
-            //     method: "GET",
-            //     headers: {
-            //         Authentication: "whatever"
-            //     }
-            // })
+            await loadBooks()
+            // create a new HTML element with the card element etc etc etc
 
-            const response = await fetch("https://striveschool-api.herokuapp.com/books")
-            const books = await response.json() // transform the response payload into a JavaScript object
-            
-            console.log(response)
-            console.log(books)
+            // const carousel = document.querySelector(".carousel-inner")
+            // for (let i = 0; i < books.length; i++) { //this operation will be executed books.length time, the index will be store in the variable i
+            //     const book = books[i] // the single book I'm printing in this operation
+            //     carousel.innerHTML += ` <div class="${i === 0 ? "carousel-item active" : "carousel-item"}">
+            //                                 <img src="${book.img}" class="d-block w-100" alt="...">
+            //                                 <div class="carousel-caption d-none d-md-block">
+            //                                 <h5>${book.title}</h5>
+            //                                 <p>${book.category}</p>
+            //                                 </div>
+            //                             </div>`
+            // }
         }
     </script>
-  </body>
+</body>
+
 </html>
